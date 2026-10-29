@@ -17,9 +17,9 @@ dist-ssr
 .env.local
 .env.*.local
 
-# Credenciais administrativas do Firebase (nunca commitar)
-scripts/serviceAccountKey.json
-scripts/node_modules
+# Caso scripts administrativos com Firebase Admin SDK sejam recriados no
+# futuro, nunca commitar a credencial de Service Account:
+serviceAccountKey.json
 
 # Editor directories and files
 .vscode/*
