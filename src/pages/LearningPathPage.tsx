@@ -1,6 +1,8 @@
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { ArrowLeft, Clock } from 'lucide-react'
 import { getLearningPathBySlug } from '../features/learning-paths/paths'
+import { FUNDAMENTOS_LESSON } from '../features/learning-paths/fundamentosContent'
+import { FUNDAMENTOS_QUIZ } from '../features/learning-paths/fundamentosQuiz'
 import { Quiz } from '../features/learning-paths/Quiz'
 
 export function LearningPathPage() {
@@ -11,7 +13,7 @@ export function LearningPathPage() {
     return <Navigate to="/" replace />
   }
 
-  if (!path.available || !path.lesson || !path.quiz) {
+  if (!path.available) {
     return (
       <main className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6">
         <h1 className="text-2xl font-bold text-white">{path.title}</h1>
@@ -41,12 +43,12 @@ export function LearningPathPage() {
 
       <h1 className="mt-4 text-3xl font-bold text-white">{path.title}</h1>
       <p className="mt-2 flex items-center gap-2 text-sm text-slate-400">
-        <Clock className="h-4 w-4" aria-hidden /> Tempo estimado de leitura:{' '}
-        {path.estimatedMinutes ?? 5} minutos
+        <Clock className="h-4 w-4" aria-hidden /> Tempo estimado de leitura:
+        5 minutos
       </p>
 
       <div className="mt-8 flex flex-col gap-8">
-        {path.lesson.map((block) => (
+        {FUNDAMENTOS_LESSON.map((block) => (
           <section key={block.heading}>
             <h2 className="text-xl font-semibold text-slate-100">
               {block.heading}
@@ -71,7 +73,7 @@ export function LearningPathPage() {
           nesta trilha.
         </p>
         <div className="mt-6">
-          <Quiz questions={path.quiz} key={path.slug} />
+          <Quiz questions={FUNDAMENTOS_QUIZ} />
         </div>
       </section>
     </main>

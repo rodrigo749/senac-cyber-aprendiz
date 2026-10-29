@@ -10,7 +10,7 @@ import {
   type User,
 } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
-import { auth, db, ADMINS_COLLECTION, isFirebaseConfigured } from '../../lib/firebase'
+import { auth, db, ADMINS_COLLECTION } from '../../lib/firebase'
 import { AuthContext } from './authContextDefinition'
 
 /**
@@ -34,19 +34,15 @@ import { AuthContext } from './authContextDefinition'
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isAdmin, setIsAdmin] = useState(false)
-  const [isLoading, setIsLoading] = useState(isFirebaseConfigured)
+  const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!isFirebaseConfigured || !auth) {
-      return
-    }
-
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser)
 
-      if (!firebaseUser || !db) {
+      if (!firebaseUser) {
         setIsAdmin(false)
         setIsLoading(false)
         return
@@ -68,11 +64,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   async function login(email: string, password: string): Promise<boolean> {
-    if (!isFirebaseConfigured || !auth) {
-      setError('Autenticação indisponível: configuração do Firebase pendente.')
-      return false
-    }
-
     setIsSubmitting(true)
     setError(null)
     try {
@@ -88,7 +79,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function logout() {
-    if (!auth) return
     await signOut(auth)
   }
 
