@@ -7,6 +7,12 @@ import {
   Briefcase,
   type LucideIcon,
 } from 'lucide-react'
+import { FUNDAMENTOS_LESSON } from './fundamentosContent'
+import { FUNDAMENTOS_QUIZ } from './fundamentosQuiz'
+import { SENHAS_2FA_LESSON } from './senhas2faContent'
+import { SENHAS_2FA_QUIZ } from './senhas2faQuiz'
+import type { LessonBlock } from './fundamentosContent'
+import type { QuizQuestion } from './fundamentosQuiz'
 
 /**
  * Dados estáticos (não persistidos no Firestore ainda) das trilhas de
@@ -14,8 +20,8 @@ import {
  * dados em `src/types/learning.ts`, facilitando a migração para o
  * Firestore quando o conteúdo for gerenciado dinamicamente.
  *
- * Apenas a trilha com `available: true` possui conteúdo e quiz real nesta
- * versão. As demais aparecem como "Em breve" na landing page.
+ * Trilhas com `available: true` possuem `lesson`/`quiz` preenchidos. As
+ * demais aparecem como "Em breve" na landing page e não têm conteúdo.
  */
 export interface LearningPathSummary {
   slug: string
@@ -23,6 +29,9 @@ export interface LearningPathSummary {
   title: string
   description: string
   available: boolean
+  estimatedMinutes?: number
+  lesson?: LessonBlock[]
+  quiz?: QuizQuestion[]
 }
 
 export const LEARNING_PATHS: LearningPathSummary[] = [
@@ -33,6 +42,9 @@ export const LEARNING_PATHS: LearningPathSummary[] = [
     description:
       'Conceitos essenciais para entender ameaças digitais e como se proteger.',
     available: true,
+    estimatedMinutes: 5,
+    lesson: FUNDAMENTOS_LESSON,
+    quiz: FUNDAMENTOS_QUIZ,
   },
   {
     slug: 'senhas-fortes-e-2fa',
@@ -40,7 +52,10 @@ export const LEARNING_PATHS: LearningPathSummary[] = [
     title: 'Senhas fortes e autenticação em dois fatores',
     description:
       'Boas práticas para criar senhas seguras e ativar camadas extras de proteção.',
-    available: false,
+    available: true,
+    estimatedMinutes: 6,
+    lesson: SENHAS_2FA_LESSON,
+    quiz: SENHAS_2FA_QUIZ,
   },
   {
     slug: 'phishing-e-engenharia-social',

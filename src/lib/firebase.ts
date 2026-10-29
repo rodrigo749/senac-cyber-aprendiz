@@ -13,9 +13,9 @@
  *   para não colidir com outras aplicações que porventura usem o mesmo
  *   projeto Firebase.
  */
-import { initializeApp, getApps, getApp } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
-import { getAuth } from 'firebase/auth'
+import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app'
+import { getFirestore, type Firestore } from 'firebase/firestore'
+import { getAuth, type Auth } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -32,16 +32,28 @@ const firebaseConfig = {
  * Sinaliza se as variáveis mínimas para o Firebase funcionar foram
  * configuradas. Usado para exibir mensagens de erro amigáveis em vez de
  * quebrar a aplicação silenciosamente.
+ *
+ * IMPORTANTE: se as variáveis de ambiente VITE_FIREBASE_* não estiverem
+ * definidas no ambiente de build (ex.: Vercel sem as env vars
+ * configuradas), o Firebase NÃO deve ser inicializado — inicializar com
+ * uma apiKey vazia/inválida lança `auth/invalid-api-key` e quebra a
+ * aplicação inteira na primeira renderização. Por isso `app`, `db` e
+ * `auth` abaixo podem ser `null`, e todo código que os usa deve checar
+ * `isFirebaseConfigured` antes.
  */
 export const isFirebaseConfigured = Boolean(
   firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId,
 )
 
-export const app = getApps().length ? getApp() : initializeApp(firebaseConfig)
+export const app: FirebaseApp | null = isFirebaseConfigured
+  ? getApps().length
+    ? getApp()
+    : initializeApp(firebaseConfig)
+  : null
 
-export const db = getFirestore(app)
+export const db: Firestore | null = app ? getFirestore(app) : null
 
-export const auth = getAuth(app)
+export const auth: Auth | null = app ? getAuth(app) : null
 
 /**
  * Nome da coleção do Firestore que autoriza usuários administradores.

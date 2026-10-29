@@ -5,7 +5,7 @@ import {
   serverTimestamp,
   setDoc,
 } from 'firebase/firestore'
-import { db, NEWSLETTER_COLLECTION } from '../lib/firebase'
+import { db, NEWSLETTER_COLLECTION, isFirebaseConfigured } from '../lib/firebase'
 import { normalizeEmail } from '../schemas/newsletter'
 import { CONSENT_POLICY_VERSION } from '../types/newsletter'
 import type {
@@ -32,6 +32,14 @@ import type {
 export async function subscribeToNewsletter(
   input: NewsletterFormInput,
 ): Promise<NewsletterSubmitResult> {
+  if (!isFirebaseConfigured || !db) {
+    return {
+      status: 'error',
+      message:
+        'Cadastro indisponível no momento: configuração do Firebase pendente.',
+    }
+  }
+
   const emailNormalized = normalizeEmail(input.email)
   const trimmedName = input.name?.trim()
 
@@ -75,7 +83,10 @@ export async function subscribeToNewsletter(
   }
 }
 
-/** Referência utilitária à coleção, útil para testes. */
+/** Referência utilitária à coleção, útil para testes e para o painel admin. */
 export function getNewsletterCollectionRef() {
+  if (!db) {
+    throw new Error('Firebase não está configurado.')
+  }
   return collection(db, NEWSLETTER_COLLECTION)
 }
