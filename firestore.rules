@@ -23,12 +23,32 @@ rules_version = '2';
  *   camada de defesa (a primeira é o Zod no frontend). Isso NÃO substitui
  *   uma função de backend com rate limiting; veja o README para o plano de
  *   evolução com Cloud Functions.
+ *
+ * Área administrativa (cyberAprendiz_admins):
+ * - Um usuário é considerado administrador se existir um documento com seu
+ *   UID (obtido via Firebase Authentication) na coleção
+ *   `cyberAprendiz_admins`. Essa coleção não é gerenciada pelo frontend —
+ *   os documentos devem ser criados manualmente pelo Console do Firebase
+ *   (ou por uma Cloud Function com Admin SDK), nunca pelo cliente.
+ * - A função `isAdmin()` abaixo é usada para liberar a LEITURA da coleção
+ *   de inscritos (nome/e-mail) somente para administradores autenticados.
+ *   O público em geral continua sem qualquer acesso de leitura.
  */
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    match /cyberAprendiz_newsletterSubscribers/{emailId} {
+    function isAdmin() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/cyberAprendiz_admins/$(request.auth.uid));
+    }
+
+    match /cyberAprendiz_admins/{adminUid} {
       allow read: if false;
+      allow write: if false;
+    }
+
+    match /cyberAprendiz_newsletterSubscribers/{emailId} {
+      allow read: if isAdmin();
 
       allow create: if
         // Garante que o ID do documento é o próprio e-mail normalizado

@@ -15,6 +15,7 @@
  */
 import { initializeApp, getApps, getApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -39,6 +40,16 @@ export const isFirebaseConfigured = Boolean(
 export const app = getApps().length ? getApp() : initializeApp(firebaseConfig)
 
 export const db = getFirestore(app)
+
+export const auth = getAuth(app)
+
+/**
+ * Nome da coleção do Firestore que autoriza usuários administradores.
+ * O documento é identificado pelo UID do usuário autenticado (não pelo
+ * e-mail), e seu conteúdo nunca é lido pelo frontend além de checar a
+ * própria existência (ver firestore.rules e AuthContext).
+ */
+export const ADMINS_COLLECTION = 'cyberAprendiz_admins'
 
 /**
  * Nome da coleção do Firestore usada exclusivamente pelo Senac CyberAprendiz
