@@ -3,6 +3,7 @@ import { Header } from './components/layout/Header'
 import { Footer } from './components/layout/Footer'
 import { HomePage } from './pages/home/HomePage'
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage'
+import { LearningPathPage } from './pages/LearningPathPage'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/privacidade" element={<PrivacyPolicyPage />} />
+          <Route path="/trilhas/:slug" element={<LearningPathPage />} />
         </Routes>
         <Footer />
       </div>

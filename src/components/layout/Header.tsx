@@ -4,6 +4,7 @@ import { ShieldCheck, Menu, X } from 'lucide-react'
 
 const NAV_LINKS = [
   { href: '#sobre', label: 'Sobre o projeto' },
+  { href: '#material', label: 'Material' },
   { href: '#trilhas', label: 'Trilhas' },
   { href: '#desafios', label: 'Desafios' },
   { href: '#gamificacao', label: 'Gamificação' },

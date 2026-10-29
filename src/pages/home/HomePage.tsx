@@ -1,4 +1,5 @@
 import { Hero } from './Hero'
+import { MaterialDownloadSection } from './MaterialDownloadSection'
 import { AboutSection } from './AboutSection'
 import { LearningPathsSection } from './LearningPathsSection'
 import { ChallengesSection } from './ChallengesSection'
@@ -9,6 +10,7 @@ export function HomePage() {
   return (
     <main>
       <Hero />
+      <MaterialDownloadSection />
       <AboutSection />
       <LearningPathsSection />
       <ChallengesSection />

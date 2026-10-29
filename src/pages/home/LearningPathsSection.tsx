@@ -1,52 +1,7 @@
-import {
-  ShieldQuestion,
-  KeyRound,
-  Fish,
-  Lock,
-  Smartphone,
-  Briefcase,
-} from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { Card } from '../../components/ui/Card'
 import { Badge } from '../../components/ui/Badge'
-
-const PATHS = [
-  {
-    icon: ShieldQuestion,
-    title: 'Fundamentos da segurança cibernética',
-    description:
-      'Conceitos essenciais para entender ameaças digitais e como se proteger.',
-  },
-  {
-    icon: KeyRound,
-    title: 'Senhas fortes e autenticação em dois fatores',
-    description:
-      'Boas práticas para criar senhas seguras e ativar camadas extras de proteção.',
-  },
-  {
-    icon: Fish,
-    title: 'Phishing, engenharia social e golpes digitais',
-    description:
-      'Como reconhecer tentativas de golpe e mensagens fraudulentas.',
-  },
-  {
-    icon: Lock,
-    title: 'Proteção de dados e privacidade',
-    description:
-      'Princípios para proteger informações pessoais no ambiente digital.',
-  },
-  {
-    icon: Smartphone,
-    title: 'Navegação segura e dispositivos',
-    description:
-      'Cuidados ao navegar e configurar dispositivos móveis e computadores.',
-  },
-  {
-    icon: Briefcase,
-    title: 'Segurança no ambiente de trabalho e nos estudos',
-    description:
-      'Práticas recomendadas para proteger dados em contextos profissionais e acadêmicos.',
-  },
-]
+import { LEARNING_PATHS } from '../../features/learning-paths/paths'
 
 export function LearningPathsSection() {
   return (
@@ -68,13 +23,25 @@ export function LearningPathsSection() {
         </p>
 
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {PATHS.map(({ icon: Icon, title, description }) => (
-            <Card key={title} className="flex flex-col gap-3">
+          {LEARNING_PATHS.map(({ slug, icon: Icon, title, description, available }) => (
+            <Card key={slug} className="flex flex-col gap-3">
               <Icon className="h-8 w-8 text-senac" aria-hidden />
               <h3 className="font-semibold text-slate-100">{title}</h3>
               <p className="text-sm text-slate-400">{description}</p>
-              <div className="mt-auto pt-2">
-                <Badge tone="amber">Em breve</Badge>
+              <div className="mt-auto flex items-center justify-between gap-2 pt-2">
+                {available ? (
+                  <Badge tone="cyan">Disponível</Badge>
+                ) : (
+                  <Badge tone="amber">Em breve</Badge>
+                )}
+                {available && (
+                  <Link
+                    to={`/trilhas/${slug}`}
+                    className="text-sm font-semibold text-senac hover:text-senac-light"
+                  >
+                    Começar →
+                  </Link>
+                )}
               </div>
             </Card>
           ))}
