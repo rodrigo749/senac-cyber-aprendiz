@@ -1,0 +1,56 @@
+rules_version = '2';
+
+/**
+ * Regras de segurança do Firestore para o projeto Senac CyberAprendiz.
+ *
+ * Coleção: cyberAprendiz_newsletterSubscribers (nome configurável via
+ * variável de ambiente VITE_FIREBASE_NEWSLETTER_COLLECTION — mantenha este
+ * arquivo em sincronia caso o nome seja alterado).
+ *
+ * Estratégia:
+ * - O ID do documento é o e-mail normalizado. Isso permite que a regra de
+ *   "create" verifique se o documento já existe (impede duplicidade).
+ * - Leitura pública é NEGADA: o frontend nunca lista nem lê e-mails de
+ *   outros participantes. A aplicação só faz "get" de um documento
+ *   específico (o do próprio e-mail que o usuário está tentando cadastrar)
+ *   para checar duplicidade — mesmo assim, o conteúdo do documento não é
+ *   exibido ao usuário.
+ * - "update"/"delete" são negados ao cliente: qualquer correção ou exclusão
+ *   solicitada por um participante deve ser tratada manualmente ou por uma
+ *   função de backend com privilégios de administrador (Admin SDK), nunca
+ *   diretamente pelo frontend.
+ * - Validação de formato e tamanho é feita nas regras como uma segunda
+ *   camada de defesa (a primeira é o Zod no frontend). Isso NÃO substitui
+ *   uma função de backend com rate limiting; veja o README para o plano de
+ *   evolução com Cloud Functions.
+ */
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /cyberAprendiz_newsletterSubscribers/{emailId} {
+      allow read: if false;
+
+      allow create: if
+        // Garante que o ID do documento é o próprio e-mail normalizado
+        // enviado no corpo, prevenindo inconsistência e facilitando a
+        // checagem de duplicidade.
+        request.resource.data.emailNormalized == emailId &&
+        request.resource.data.emailNormalized is string &&
+        request.resource.data.emailNormalized.size() > 3 &&
+        request.resource.data.emailNormalized.size() < 255 &&
+        request.resource.data.emailNormalized.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$') &&
+        request.resource.data.consentStatus == 'granted' &&
+        request.resource.data.consentPolicyVersion is string &&
+        request.resource.data.source is string &&
+        // Opcional: nome, se presente, deve ser uma string curta.
+        (!('name' in request.resource.data) ||
+          (request.resource.data.name is string &&
+           request.resource.data.name.size() <= 120)) &&
+        // Impede sobrescrever um cadastro existente.
+        !exists(/databases/$(database)/documents/cyberAprendiz_newsletterSubscribers/$(emailId));
+
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+}

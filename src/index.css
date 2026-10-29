@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-dark: #061a2b;
+  --color-brand-navy: #0b2a43;
+  --color-brand-blue: #1565c0;
+  --color-brand-cyan: #22d3ee;
+  --color-brand-green: #22c55e;
+
+  /* Cores institucionais do Senac (laranja característico + azul). */
+  --color-senac: #ff6600;
+  --color-senac-dark: #e55a00;
+  --color-senac-light: #ff8a3d;
+  --color-senac-blue: #004a8d;
+  --color-senac-blue-dark: #00325e;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  @apply bg-slate-950 text-slate-100 antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid #ff6600;
+  outline-offset: 2px;
+}
