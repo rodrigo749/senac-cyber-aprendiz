@@ -1,8 +1,6 @@
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { ArrowLeft, Clock } from 'lucide-react'
 import { getLearningPathBySlug } from '../features/learning-paths/paths'
-import { FUNDAMENTOS_LESSON } from '../features/learning-paths/fundamentosContent'
-import { FUNDAMENTOS_QUIZ } from '../features/learning-paths/fundamentosQuiz'
 import { Quiz } from '../features/learning-paths/Quiz'
 
 export function LearningPathPage() {
@@ -48,7 +46,7 @@ export function LearningPathPage() {
       </p>
 
       <div className="mt-8 flex flex-col gap-8">
-        {FUNDAMENTOS_LESSON.map((block) => (
+        {path.lesson.map((block) => (
           <section key={block.heading}>
             <h2 className="text-xl font-semibold text-slate-100">
               {block.heading}
@@ -73,7 +71,7 @@ export function LearningPathPage() {
           nesta trilha.
         </p>
         <div className="mt-6">
-          <Quiz questions={FUNDAMENTOS_QUIZ} />
+          <Quiz questions={path.quiz} />
         </div>
       </section>
     </main>
