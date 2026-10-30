@@ -4,6 +4,7 @@ import { Footer } from './components/layout/Footer'
 import { HomePage } from './pages/home/HomePage'
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage'
 import { LearningPathPage } from './pages/LearningPathPage'
+import { QuizPremiadoPage } from './features/quiz-premiado/QuizPremiadoPage'
 import { AdminLoginPage } from './pages/admin/AdminLoginPage'
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage'
 import { AuthProvider } from './features/admin/AuthContext'
@@ -19,6 +20,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/privacidade" element={<PrivacyPolicyPage />} />
             <Route path="/trilhas/:slug" element={<LearningPathPage />} />
+            <Route path="/quiz-premiado" element={<QuizPremiadoPage />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route
               path="/admin"

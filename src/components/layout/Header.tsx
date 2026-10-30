@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ShieldCheck, Menu, X, Lock } from 'lucide-react'
+import { ShieldCheck, Menu, X, Lock, Trophy } from 'lucide-react'
 
 const NAV_LINKS = [
   { href: '#sobre', label: 'Sobre o projeto' },
@@ -46,6 +46,13 @@ export function Header() {
           >
             Quero participar
           </a>
+          <Link
+            to="/quiz-premiado"
+            className="inline-flex items-center gap-2 text-sm text-slate-300 transition hover:text-senac"
+          >
+            <Trophy className="h-4 w-4" aria-hidden />
+            Quiz Premiado
+          </Link>
           <Link
             to="/admin/login"
             aria-label="Área administrativa"
@@ -95,6 +102,14 @@ export function Header() {
           >
             Quero participar
           </a>
+          <Link
+            to="/quiz-premiado"
+            onClick={() => setIsMenuOpen(false)}
+            className="mt-1 inline-flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:text-senac"
+          >
+            <Trophy className="h-4 w-4" aria-hidden />
+            Quiz Premiado
+          </Link>
           <Link
             to="/admin/login"
             onClick={() => setIsMenuOpen(false)}
