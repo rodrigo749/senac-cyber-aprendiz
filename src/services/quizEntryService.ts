@@ -1,5 +1,6 @@
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   serverTimestamp,
@@ -73,4 +74,16 @@ export function getQuizEntriesCollectionRef() {
     throw new Error('Firebase não configurado.')
   }
   return collection(db, QUIZ_ENTRIES_COLLECTION)
+}
+
+/**
+ * Remove a participação de um e-mail no Quiz Premiado. Só funciona se o
+ * usuário autenticado for administrador (ver firestore.rules) — caso
+ * contrário, o Firestore rejeita a operação com erro de permissão.
+ */
+export async function deleteQuizEntry(emailId: string): Promise<void> {
+  if (!db) {
+    throw new Error('Firebase não configurado.')
+  }
+  await deleteDoc(doc(db, QUIZ_ENTRIES_COLLECTION, emailId))
 }
