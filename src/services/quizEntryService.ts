@@ -2,7 +2,6 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   serverTimestamp,
   setDoc,
 } from 'firebase/firestore'
@@ -34,11 +33,7 @@ export async function submitQuizEntry(
   const docRef = doc(db, QUIZ_ENTRIES_COLLECTION, emailNormalized)
 
   try {
-    const existing = await getDoc(docRef)
-    if (existing.exists()) {
-      return { status: 'duplicate' }
-    }
-
+    // Sem leitura prévia: as regras negam "read" a não administradores.
     await setDoc(docRef, {
       emailNormalized,
       name: trimmedName,
@@ -49,17 +44,11 @@ export async function submitQuizEntry(
       createdAt: serverTimestamp(),
     })
 
-    const confirmation = await getDoc(docRef)
-    if (!confirmation.exists()) {
-      return {
-        status: 'error',
-        message:
-          'Não foi possível confirmar seu resultado. Tente novamente em instantes.',
-      }
-    }
-
     return { status: 'success' }
-  } catch {
+  } catch (error) {
+    if ((error as { code?: string })?.code === 'permission-denied') {
+      return { status: 'duplicate' }
+    }
     return {
       status: 'error',
       message:

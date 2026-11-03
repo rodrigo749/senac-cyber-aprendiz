@@ -1,7 +1,6 @@
 import {
   collection,
   doc,
-  getDoc,
   serverTimestamp,
   setDoc,
 } from 'firebase/firestore'
@@ -45,11 +44,8 @@ export async function subscribeToNewsletter(
   const docRef = doc(db, NEWSLETTER_COLLECTION, emailNormalized)
 
   try {
-    const existing = await getDoc(docRef)
-    if (existing.exists()) {
-      return { status: 'duplicate' }
-    }
-
+    // Sem leitura prévia: as regras negam "read" a não administradores.
+    // Se o documento já existir, o setDoc vira "update" e é negado.
     await setDoc(docRef, {
       emailNormalized,
       ...(trimmedName ? { name: trimmedName } : {}),
@@ -61,18 +57,11 @@ export async function subscribeToNewsletter(
       updatedAt: serverTimestamp(),
     })
 
-    // Confirma a persistência antes de informar sucesso ao usuário.
-    const confirmation = await getDoc(docRef)
-    if (!confirmation.exists()) {
-      return {
-        status: 'error',
-        message:
-          'Não foi possível confirmar o cadastro. Tente novamente em instantes.',
-      }
-    }
-
     return { status: 'success' }
-  } catch {
+  } catch (error) {
+    if ((error as { code?: string })?.code === 'permission-denied') {
+      return { status: 'duplicate' }
+    }
     // Nunca expor detalhes internos do Firebase/erro ao usuário final.
     return {
       status: 'error',
