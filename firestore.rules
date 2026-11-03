@@ -43,7 +43,12 @@ service cloud.firestore {
     }
 
     match /cyberAprendiz_admins/{adminUid} {
-      allow read: if false;
+      // Um usuário autenticado pode ler APENAS o próprio documento (para o
+      // frontend confirmar se ele é administrador). Ninguém pode ler o
+      // documento de outro UID, e ninguém pode escrever por aqui — a
+      // concessão de acesso administrativo é feita manualmente pelo
+      // Console do Firebase.
+      allow read: if request.auth != null && request.auth.uid == adminUid;
       allow write: if false;
     }
 
