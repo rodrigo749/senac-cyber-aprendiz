@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ShieldCheck, Menu, X, Lock, Trophy } from 'lucide-react'
+import { ShieldCheck, Menu, X, Lock } from 'lucide-react'
 
 const NAV_LINKS = [
   { href: '#sobre', label: 'Sobre o projeto' },
