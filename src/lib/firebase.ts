@@ -77,6 +77,8 @@ export const NEWSLETTER_COLLECTION =
  * Nome da coleção do Firestore usada pelo "Quiz Premiado" para registrar
  * nome, e-mail e pontuação de cada participante.
  */
+export const QUIZ_PARTICIPANTS_COLLECTION = 'cyberAprendiz_quizParticipants'
+
 export const QUIZ_ENTRIES_COLLECTION =
   import.meta.env.VITE_FIREBASE_QUIZ_ENTRIES_COLLECTION ??
   'cyberAprendiz_quizEntries'

@@ -78,6 +78,20 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Marcador de "e-mail já participou do quiz". Contém apenas a data, sem
+    // nome/pontuação, então pode ter leitura pública de um documento por vez
+    // (get). Listagem é negada. Só pode ser criado junto com a participação
+    // correspondente (mesmo batch).
+    match /cyberAprendiz_quizParticipants/{emailId} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if
+        existsAfter(/databases/$(database)/documents/cyberAprendiz_quizEntries/$(emailId)) &&
+        !exists(/databases/$(database)/documents/cyberAprendiz_quizParticipants/$(emailId));
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
     match /cyberAprendiz_quizEntries/{emailId} {
       allow read: if isAdmin();
 

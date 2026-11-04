@@ -2,10 +2,16 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   serverTimestamp,
-  setDoc,
+  writeBatch,
 } from 'firebase/firestore'
-import { db, QUIZ_ENTRIES_COLLECTION, isFirebaseConfigured } from '../lib/firebase'
+import {
+  db,
+  QUIZ_ENTRIES_COLLECTION,
+  QUIZ_PARTICIPANTS_COLLECTION,
+  isFirebaseConfigured,
+} from '../lib/firebase'
 import { normalizeEmail } from '../schemas/newsletter'
 import { QUIZ_CONSENT_POLICY_VERSION } from '../types/quizEntry'
 import type { QuizEntryInput, QuizEntrySubmitResult } from '../types/quizEntry'
@@ -33,8 +39,9 @@ export async function submitQuizEntry(
   const docRef = doc(db, QUIZ_ENTRIES_COLLECTION, emailNormalized)
 
   try {
-    // Sem leitura prévia: as regras negam "read" a não administradores.
-    await setDoc(docRef, {
+    // Grava participação e marcador atomicamente (as regras exigem ambos).
+    const batch = writeBatch(db)
+    batch.set(docRef, {
       emailNormalized,
       name: trimmedName,
       score: input.score,
@@ -44,6 +51,10 @@ export async function submitQuizEntry(
       source: 'quiz-premiado',
       createdAt: serverTimestamp(),
     })
+    batch.set(doc(db, QUIZ_PARTICIPANTS_COLLECTION, emailNormalized), {
+      createdAt: serverTimestamp(),
+    })
+    await batch.commit()
 
     return { status: 'success' }
   } catch (error) {
@@ -76,4 +87,22 @@ export async function deleteQuizEntry(emailId: string): Promise<void> {
     throw new Error('Firebase não configurado.')
   }
   await deleteDoc(doc(db, QUIZ_ENTRIES_COLLECTION, emailId))
+  // Libera o e-mail para participar novamente.
+  await deleteDoc(doc(db, QUIZ_PARTICIPANTS_COLLECTION, emailId))
+}
+
+/**
+ * Verifica se o e-mail já participou do quiz. Em caso de falha na consulta,
+ * não bloqueia o usuário (a gravação final ainda impede duplicidade).
+ */
+export async function hasEmailParticipated(email: string): Promise<boolean> {
+  if (!isFirebaseConfigured || !db) return false
+  try {
+    const snap = await getDoc(
+      doc(db, QUIZ_PARTICIPANTS_COLLECTION, normalizeEmail(email)),
+    )
+    return snap.exists()
+  } catch {
+    return false
+  }
 }

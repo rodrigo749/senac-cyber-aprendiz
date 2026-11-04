@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trophy, Clock, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
 import { quizEntryFormSchema, type QuizEntryFormSchema } from '../../schemas/quizEntry'
-import { submitQuizEntry } from '../../services/quizEntryService'
+import { submitQuizEntry, hasEmailParticipated } from '../../services/quizEntryService'
 import { PREMIADO_QUIZ } from './premiadoQuiz'
 
 type Step = 'form' | 'quiz' | 'done'
@@ -19,6 +19,7 @@ export function QuizPremiadoPage() {
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isChecking, setIsChecking] = useState(false)
   const [finalScore, setFinalScore] = useState(0)
 
   const {
@@ -31,7 +32,15 @@ export function QuizPremiadoPage() {
 
   const startedAtRef = useRef<number>(0)
 
-  function onStart(data: QuizEntryFormSchema) {
+  async function onStart(data: QuizEntryFormSchema) {
+    setSubmitError(null)
+    setIsChecking(true)
+    const alreadyParticipated = await hasEmailParticipated(data.email)
+    setIsChecking(false)
+    if (alreadyParticipated) {
+      setSubmitError('Este e-mail já participou do Quiz Premiado e não pode iniciar novamente.')
+      return
+    }
     startedAtRef.current = Date.now()
     setEntry(data)
     setStep('quiz')
@@ -133,10 +142,22 @@ export function QuizPremiadoPage() {
             </span>
           </p>
 
+          {submitError && (
+            <p
+              role="alert"
+              className="flex items-start gap-2 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300"
+            >
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+              {submitError}
+            </p>
+          )}
+
           <button
             type="submit"
-            className="mt-2 w-full rounded-lg bg-senac px-6 py-3 font-semibold text-white transition hover:bg-senac-light sm:w-auto"
+            disabled={isChecking}
+            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-senac px-6 py-3 font-semibold text-white transition hover:bg-senac-light disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
           >
+            {isChecking && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}
             Iniciar quiz
           </button>
         </form>
