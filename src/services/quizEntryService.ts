@@ -39,6 +39,7 @@ export async function submitQuizEntry(
       name: trimmedName,
       score: input.score,
       totalQuestions: input.totalQuestions,
+      durationMs: Math.max(0, Math.round(input.durationMs)),
       consentPolicyVersion: QUIZ_CONSENT_POLICY_VERSION,
       source: 'quiz-premiado',
       createdAt: serverTimestamp(),

@@ -14,6 +14,7 @@ export interface QuizEntry {
   name: string
   score: number
   totalQuestions: number
+  durationMs: number
   consentPolicyVersion: string
   source: string
   createdAt: unknown // serverTimestamp()
@@ -25,6 +26,8 @@ export interface QuizEntryInput {
   name: string
   score: number
   totalQuestions: number
+  /** Tempo, em milissegundos, entre clicar em iniciar e enviar. */
+  durationMs: number
 }
 
 export type QuizEntrySubmitResult =

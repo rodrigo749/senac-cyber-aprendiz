@@ -92,6 +92,8 @@ service cloud.firestore {
         request.resource.data.name.size() <= 120 &&
         request.resource.data.score is int &&
         request.resource.data.totalQuestions is int &&
+        request.resource.data.durationMs is int &&
+        request.resource.data.durationMs >= 0 &&
         request.resource.data.consentPolicyVersion is string &&
         request.resource.data.source is string &&
         // Impede sobrescrever uma participação existente.

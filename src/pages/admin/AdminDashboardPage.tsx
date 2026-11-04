@@ -4,6 +4,7 @@ import { useAuth } from '../../features/admin/useAuth'
 import {
   listNewsletterSubscribers,
   listQuizEntries,
+  formatDuration,
   type SubscriberRow,
   type QuizEntryRow,
 } from '../../services/adminService'
@@ -248,6 +249,9 @@ export function AdminDashboardPage() {
                   <thead className="bg-slate-900/80 text-slate-400">
                     <tr>
                       <th scope="col" className="px-4 py-3 font-medium">
+                        #
+                      </th>
+                      <th scope="col" className="px-4 py-3 font-medium">
                         Nome
                       </th>
                       <th scope="col" className="px-4 py-3 font-medium">
@@ -255,6 +259,9 @@ export function AdminDashboardPage() {
                       </th>
                       <th scope="col" className="px-4 py-3 font-medium">
                         Pontuação
+                      </th>
+                      <th scope="col" className="px-4 py-3 font-medium">
+                        Tempo gasto
                       </th>
                       <th scope="col" className="px-4 py-3 font-medium">
                         Respondido em
@@ -268,7 +275,7 @@ export function AdminDashboardPage() {
                     {quizEntries.length === 0 && (
                       <tr>
                         <td
-                          colSpan={5}
+                          colSpan={7}
                           className="px-4 py-6 text-center text-slate-500"
                         >
                           Ninguém respondeu o Quiz Premiado ainda.
@@ -277,6 +284,7 @@ export function AdminDashboardPage() {
                     )}
                     {quizEntries.map((entry, index) => (
                       <tr key={entry.id} className="bg-slate-950/40">
+                        <td className="px-4 py-3 text-slate-400">{index + 1}º</td>
                         <td className="px-4 py-3 text-slate-200">
                           {index === 0 && entry.score > 0 && (
                             <Trophy
@@ -291,6 +299,9 @@ export function AdminDashboardPage() {
                         </td>
                         <td className="px-4 py-3 font-semibold text-slate-100">
                           {entry.score} / {entry.totalQuestions}
+                        </td>
+                        <td className="px-4 py-3 font-mono text-slate-200">
+                          {formatDuration(entry.durationMs)}
                         </td>
                         <td className="px-4 py-3 text-slate-400">
                           {entry.createdAt

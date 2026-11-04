@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Trophy, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
+import { Trophy, Clock, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
 import { quizEntryFormSchema, type QuizEntryFormSchema } from '../../schemas/quizEntry'
 import { submitQuizEntry } from '../../services/quizEntryService'
 import { PREMIADO_QUIZ } from './premiadoQuiz'
@@ -29,7 +29,10 @@ export function QuizPremiadoPage() {
     resolver: zodResolver(quizEntryFormSchema),
   })
 
+  const startedAtRef = useRef<number>(0)
+
   function onStart(data: QuizEntryFormSchema) {
+    startedAtRef.current = Date.now()
     setEntry(data)
     setStep('quiz')
   }
@@ -55,6 +58,7 @@ export function QuizPremiadoPage() {
       email: entry.email,
       score,
       totalQuestions: PREMIADO_QUIZ.length,
+      durationMs: Date.now() - startedAtRef.current,
     })
 
     setIsSubmitting(false)
@@ -116,11 +120,24 @@ export function QuizPremiadoPage() {
             )}
           </div>
 
+          <p
+            role="note"
+            className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-200"
+          >
+            <Clock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+            <span>
+              Atenção: ao clicar em <strong>Iniciar quiz</strong>, o tempo
+              começa a ser contado até o envio das respostas. Esse tempo será
+              salvo e usado como critério de premiação: vence quem acertar
+              mais perguntas e, em caso de empate, quem levar menos tempo.
+            </span>
+          </p>
+
           <button
             type="submit"
             className="mt-2 w-full rounded-lg bg-senac px-6 py-3 font-semibold text-white transition hover:bg-senac-light sm:w-auto"
           >
-            Começar o quiz
+            Iniciar quiz
           </button>
         </form>
       )}
