@@ -4,6 +4,7 @@ import { Footer } from './components/layout/Footer'
 import { HomePage } from './pages/home/HomePage'
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage'
 import { LearningPathPage } from './pages/LearningPathPage'
+import { SharePage } from './pages/SharePage'
 import { QuizPremiadoPage } from './features/quiz-premiado/QuizPremiadoPage'
 import { AdminLoginPage } from './pages/admin/AdminLoginPage'
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage'
@@ -21,6 +22,7 @@ function App() {
             <Route path="/privacidade" element={<PrivacyPolicyPage />} />
             <Route path="/trilhas/:slug" element={<LearningPathPage />} />
             <Route path="/quiz-premiado" element={<QuizPremiadoPage />} />
+            <Route path="/compartilhar" element={<SharePage />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route
               path="/admin"

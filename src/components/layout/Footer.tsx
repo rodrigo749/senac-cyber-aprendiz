@@ -14,6 +14,9 @@ export function Footer() {
           <Link to="/privacidade" className="hover:text-senac">
             Política de Privacidade
           </Link>
+          <Link to="/compartilhar" className="hover:text-senac">
+            Compartilhar
+          </Link>
         </nav>
       </div>
     </footer>
