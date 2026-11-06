@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ShieldCheck, Menu, X, Lock } from 'lucide-react'
+import { ShieldCheck, Menu, X, Lock, Trophy } from 'lucide-react'
 
 const NAV_LINKS = [
   { href: '#sobre', label: 'Sobre o projeto' },
@@ -40,15 +40,10 @@ export function Header() {
               {link.label}
             </a>
           ))}
-          <a
-            href="#cadastro"
-            className="rounded-lg bg-senac px-4 py-2 text-sm font-semibold text-white transition hover:bg-senac-light"
-          >
-            Quero participar
-          </a>
+
           {/* <Link
             to="/quiz-premiado"
-            className="inline-flex items-center gap-2 text-sm text-slate-300 transition hover:text-senac"
+       className="rounded-lg bg-senac px-4 py-2 text-sm font-semibold text-white transition hover:bg-senac-light"
           >
             <Trophy className="h-4 w-4" aria-hidden />
             Quiz Premiado
@@ -95,17 +90,10 @@ export function Header() {
               {link.label}
             </a>
           ))}
-          <a
-            href="#cadastro"
-            onClick={() => setIsMenuOpen(false)}
-            className="mt-2 rounded-lg bg-senac px-3 py-2 text-center text-sm font-semibold text-white"
-          >
-            Quero participar
-          </a>
           {/* <Link
             to="/quiz-premiado"
             onClick={() => setIsMenuOpen(false)}
-            className="mt-1 inline-flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:text-senac"
+            className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-senac px-3 py-2 text-center text-sm font-semibold text-white"
           >
             <Trophy className="h-4 w-4" aria-hidden />
             Quiz Premiado
