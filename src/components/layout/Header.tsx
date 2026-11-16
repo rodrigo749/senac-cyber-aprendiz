@@ -41,13 +41,13 @@ export function Header() {
             </a>
           ))}
 
-          <Link
+          {/* <Link
             to="/quiz-premiado"
        className="rounded-lg bg-senac px-4 py-2 text-sm font-semibold text-white transition hover:bg-senac-light"
           >
             <Trophy className="h-4 w-4" aria-hidden />
             Quiz Premiado
-          </Link>
+          </Link> */}
           <Link
             to="/admin/login"
             aria-label="Área administrativa"
