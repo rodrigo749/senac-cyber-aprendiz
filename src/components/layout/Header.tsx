@@ -90,14 +90,14 @@ export function Header() {
               {link.label}
             </a>
           ))}
-          <Link
+          {/* <Link
             to="/quiz-premiado"
             onClick={() => setIsMenuOpen(false)}
             className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-senac px-3 py-2 text-center text-sm font-semibold text-white"
           >
             <Trophy className="h-4 w-4" aria-hidden />
             Quiz Premiado
-          </Link>
+          </Link> */}
           <Link
             to="/admin/login"
             onClick={() => setIsMenuOpen(false)}
